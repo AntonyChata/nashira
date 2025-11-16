@@ -192,37 +192,107 @@
 
 
 /* Botón flotante de música */
-.music-btn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  border:none;
-  cursor:pointer;
-  z-index:50;
+/* ===== REPRODUCTOR ROMÁNTICO ===== */
+.music-wrapper{
+  margin:18px auto 8px;
+  max-width:320px;
+  text-align:center;
+  color:var(--muted);
+}
 
-  background: radial-gradient(circle at 30% 30%, #fff7d1, #c89b3c);
-  box-shadow:0 10px 20px rgba(0,0,0,0.25);
+.music-title{
   display:flex;
   align-items:center;
   justify-content:center;
-
-  transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+  gap:8px;
+  margin-bottom:10px;
+  font-family:'Playfair Display', serif;
+  font-size:14px;
 }
 
-.music-btn span{
+.music-line{
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg, transparent, #c9a24b, transparent);
+  opacity:0.7;
+}
+
+.music-text{
+  white-space:normal;
+}
+
+.music-slider{
+  position:relative;
+  height:4px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.7);
+  margin:0 auto 12px;
+  max-width:260px;
+  overflow:hidden;
+}
+
+.music-slider-fill{
+  position:absolute;
+  inset:0;
+  width:0%;
+  background:linear-gradient(90deg,#c9a24b,#2e6a3a);
+}
+
+.music-slider-thumb{
+  position:absolute;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#ffffff;
+  border:2px solid #c9a24b;
+}
+
+.music-controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  font-size:16px;
+}
+
+.music-icon,
+.music-heart{
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:4px;
+  font-size:18px;
+  color:#27492a;
+}
+
+.music-heart{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #fff7d8, #c89b3c);
+  box-shadow:0 8px 18px rgba(0,0,0,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-size:22px;
+  color:#ffffff;
+  transition:transform .18s ease, box-shadow .18s ease;
 }
 
-.music-btn:hover{
-  transform:translateY(-2px) scale(1.03);
-  box-shadow:0 14px 26px rgba(0,0,0,0.3);
+.music-heart span{
+  transform:translateY(-1px);
 }
 
-.music-btn.paused{
-  opacity:0.75;
+.music-heart.playing{
+  box-shadow:0 10px 24px rgba(0,0,0,0.35);
+  transform:translateY(-1px) scale(1.03);
+}
+
+.music-icon:hover,
+.music-heart:hover{
+  transform:translateY(-1px);
 }
 
 
@@ -419,46 +489,122 @@
   </script>
 
 
-  
-  <!-- Música de fondo -->
-<audio id="bg-music" src="Ma Belle Evangeline.mp3" preload="auto" loop></audio>
 
-<!-- Botón flotante de música -->
-<button class="music-btn paused" id="musicToggle" aria-label="Activar o pausar música de fondo">
-  <span>🎵</span>
-</button>
+<!-- REPRODUCTOR DE MÚSICA -->
+<div class="music-wrapper">
+  <div class="music-title">
+    <span class="music-line"></span>
+    <span class="music-text">Tocar el corazón para escuchar la hermosa canción.</span>
+    <span class="music-line"></span>
+  </div>
+
+  <div class="music-slider" id="musicBar">
+    <div class="music-slider-fill" id="musicProgress"></div>
+    <div class="music-slider-thumb" id="musicThumb"></div>
+  </div>
+
+  <div class="music-controls">
+    <button class="music-icon" id="btnShuffle" title="Aleatorio">🔀</button>
+    <button class="music-icon" id="btnPrev" title="Reiniciar">⏮</button>
+
+    <button class="music-heart" id="btnHeart" title="Reproducir / Pausar">
+      <span>♡</span>
+    </button>
+
+    <button class="music-icon" id="btnNext" title="Reiniciar">⏭</button>
+    <button class="music-icon" id="btnRepeat" title="Repetir">🔁</button>
+  </div>
+
+  <!-- Audio -->
+  <audio id="bg-music" src="Ma Belle Evangeline.mp3" preload="auto"></audio>
+</div>
+
+
+
 <script>
   (function(){
-    const audio = document.getElementById('bg-music');
-    const btn   = document.getElementById('musicToggle');
-    let playing = false;
+    const audio   = document.getElementById('bg-music');
+    const heart   = document.getElementById('btnHeart');
+    const progress= document.getElementById('musicProgress');
+    const thumb   = document.getElementById('musicThumb');
+    const bar     = document.getElementById('musicBar');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnRepeat = document.getElementById('btnRepeat');
 
-    function updateBtn(){
-      if (playing){
-        btn.classList.remove('paused');
-        btn.innerHTML = '<span>⏸</span>';   // icono cuando está sonando
-      } else {
-        btn.classList.add('paused');
-        btn.innerHTML = '<span>🎵</span>';  // icono cuando está pausado
+    let playing = false;
+    let repeatOn = false;
+
+    function updateHeart(){
+      if(playing){
+        heart.classList.add('playing');
+        heart.innerHTML = '<span>♥</span>';
+      }else{
+        heart.classList.remove('playing');
+        heart.innerHTML = '<span>♡</span>';
       }
     }
 
-    btn.addEventListener('click', () => {
-      if (!playing){
-        audio.play().then(() => {
+    // Play / pause al tocar el corazón
+    heart.addEventListener('click', () => {
+      if(!playing){
+        audio.play().then(()=>{
           playing = true;
-          updateBtn();
-        }).catch(() => {
-          // por si el navegador bloquea algo, no hacemos nada
-        });
-      } else {
+          updateHeart();
+        }).catch(()=>{});
+      }else{
         audio.pause();
         playing = false;
-        updateBtn();
+        updateHeart();
+      }
+    });
+
+    // Actualizar barra de progreso
+    audio.addEventListener('timeupdate', () => {
+      if(!audio.duration) return;
+      const pct = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = pct + '%';
+      thumb.style.left = pct + '%';
+    });
+
+    // Permitir hacer clic en la barra para adelantar/retroceder
+    bar.addEventListener('click', (e) => {
+      const rect = bar.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const pct = x / rect.width;
+      if(audio.duration){
+        audio.currentTime = pct * audio.duration;
+      }
+    });
+
+    // Botones anterior / siguiente: reinician la canción
+    function restart(){
+      audio.currentTime = 0;
+      audio.play().then(()=>{
+        playing = true;
+        updateHeart();
+      }).catch(()=>{});
+    }
+    btnPrev.addEventListener('click', restart);
+    btnNext.addEventListener('click', restart);
+
+    // Repetir
+    btnRepeat.addEventListener('click', () => {
+      repeatOn = !repeatOn;
+      audio.loop = repeatOn;
+      btnRepeat.style.color = repeatOn ? '#c89b3c' : '#27492a';
+    });
+
+    // Cuando termine (si no está en loop), actualizar corazón
+    audio.addEventListener('ended', () => {
+      if(!audio.loop){
+        playing = false;
+        updateHeart();
       }
     });
   })();
 </script>
+
 
 
 </body>
