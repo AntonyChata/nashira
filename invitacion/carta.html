@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intro Invitación Carta</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #e6f5e6;
+      font-family: 'Cormorant', serif;
+    }
+
+    .letter-container {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      cursor: pointer;
+      perspective: 1000px;
+    }
+
+    .envelope {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .envelope-body {
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border: 2px solid #a8d5a2;
+      border-radius: 6px;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .envelope-flap {
+      width: 100%;
+      height: 100%;
+      background: #c8e8c4;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top;
+      transition: transform 1s ease;
+      clip-path: polygon(0 0, 100% 0, 50% 50%);
+      z-index: 2;
+    }
+
+    .letter {
+      width: 90%;
+      height: 80%;
+      background: #fffdf7;
+      border: 1px solid #a8d5a2;
+      position: absolute;
+      left: 5%;
+      top: 60%;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      border-radius: 4px;
+      z-index: 0;
+    }
+
+    .open .envelope-flap {
+      transform: rotateX(180deg);
+    }
+
+    .open .letter {
+      opacity: 1;
+      transform: translateY(-40px);
+    }
+      .envelope-clasp {
+      position: absolute;
+      top: 35px; /* baja un poco para quedar SOBRE la solapa */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, #f7e9a0, #d4b65a);
+      border-radius: 50%;
+      z-index: 10; /* MUY POR ENCIMA DE TODO */
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      box-shadow: 0 0 8px rgba(0,0,0,0.25);
+    }
+
+    .open .envelope-clasp {
+      transform: translateX(-50%) scale(0);
+      opacity: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="letter-container" onclick="openLetter()">
+  <div class="envelope">
+    <div class="envelope-body">  <div class="envelope-clasp"></div>
+    </div>
+    <div class="envelope-flap""></div>
+  </div>
+
+  <div class="letter">
+    <h2>Mis 15 Años</h2>
+    <p>Con mucho cariño te invito a celebrar conmigo este día tan especial.</p>
+  </div>
+</div>
+
+<script>
+function openLetter() {
+  const carta = document.querySelector('.letter-container');
+  carta.classList.add('open');
+
+  setTimeout(() => {
+    window.location.href = "invitacion.html";
+  }, 1200);
+}
+</script>
+
+</body>
+</html>

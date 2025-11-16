@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invitación XV — Nashira Lucero</title>
+
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-top: #fbf9f6;
+      --bg-bottom: #eef7f0;
+      --accent: #2e6a3a;
+      --gold: #c49a3a;
+      --muted: #4f5b4f;
+      --card: transparent;
+      --radius: 18px;
+      --glass: rgba(255,255,255,0.18);
+      --btn-shadow: rgba(21,54,26,0.16);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:'Quicksand',system-ui,Arial;
+      background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+      -webkit-font-smoothing:antialiased;
+      color:#243023;
+    }
+
+    .stage{
+      width:360px;
+      margin:22px auto;
+      border-radius:calc(var(--radius) + 6px);
+      box-shadow:0 18px 40px rgba(18,40,22,0.18);
+      overflow:hidden;
+      background:#ffffff;
+    }
+
+   .canvas{
+  width:100%;
+  /* ❌ quita el aspect-ratio */
+  /* aspect-ratio:9/16; */
+  padding:22px;
+  position:relative;
+
+  /* deja ver todo el contenido */
+  overflow:visible;  /* o simplemente elimina esta línea */
+
+  background-image: url("fondoprincipal.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+    /* Capa suave para que el texto se lea mejor sobre el fondo */
+    .canvas::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        180deg,
+        rgba(255,255,255,0.65) 0%,
+        rgba(255,255,255,0.42) 35%,
+        rgba(255,255,255,0.32) 60%,
+        rgba(255,255,255,0.50) 100%
+      );
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .canvas > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .top-crown{display:flex;justify-content:center;margin-top:2px;z-index:5}
+    .crown-svg{width:74px;height:auto;opacity:0.98;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.06))}
+
+    .title-wrap{margin-top:8px;text-align:center;z-index:6;opacity:0}
+    .name{
+      font-family: 'Great Vibes', cursive;
+      font-size:34px;
+      line-height:1.02;
+      color:var(--accent);
+      letter-spacing:0.3px;
+      margin:6px 0 2px;
+      text-shadow:0 1px 2px rgba(255,255,255,0.7);
+    }
+    .tagline{font-size:20px;color:var(--muted);margin-bottom:8px;}
+
+    .heading-strong{
+      font-family:'Playfair Display', serif;
+      font-weight:600;
+      letter-spacing:0.3px;
+    }
+
+    /* Tarjetas */
+    .card{
+      width:100%;
+      background:var(--card);
+      border-radius:12px;
+      padding:12px;
+      margin:12px 0;
+      box-shadow:none;
+      backdrop-filter:none;
+      text-align:center;
+      opacity:0;
+      transform: translateY(18px);
+      border:1px solid rgba(255,255,255,0.45);
+    }
+    .card .muted{color:var(--muted);font-size:13px}
+    .card .strong{color:var(--accent);font-weight:700;font-size:15px}
+
+    /* Info */
+    .info-grid{display:flex;flex-direction:column;gap:10px;margin-top:8px;z-index:6}
+    .info-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:10px;
+      border-radius:10px;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.55);
+    }
+    .info-icon{
+  min-width:44px;
+  height:44px;
+  border-radius:12px;
+  background:linear-gradient(180deg, #f5d67b, #c29a38);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 6px 14px rgba(194,138,45,0.35);
+  border:1px solid rgba(255,255,255,0.45);
+}
+.info-icon img{
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+    .info-text{font-size:18px;color:#27492a}
+
+    /* Botones */
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;text-decoration:none;color:white;
+      box-shadow:0 8px 18px var(--btn-shadow);
+      transform: translateZ(0);
+    }
+    .btn-whats{background:linear-gradient(180deg,var(--accent),#234b25)}
+    .btn-map{background:linear-gradient(180deg,var(--gold),#a3782a);color:#fff}
+    .btn svg{width:16px;height:16px;flex-shrink:0}
+
+    /* Animaciones */
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(18px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0% { box-shadow:0 8px 18px rgba(0,0,0,0.06); transform:translateY(0) scale(1); }
+      50% { box-shadow:0 14px 26px rgba(0,0,0,0.10); transform:translateY(-1px) scale(1.01); }
+      100% { box-shadow:0 8px 18px rgba(0,0,0,0.06); transform:translateY(0) scale(1); }
+    }
+
+    .btn:hover { transform: translateY(-2px) scale(1.01); transition: transform .18s ease; }
+    .btn.idlePulse { animation: pulse 3.6s ease-in-out infinite; animation-delay: 1s; }
+
+    /* Countdown */
+    .countdown{display:flex;gap:8px;justify-content:center;margin-top:6px}
+    .countdown .box{min-width:44px;padding:8px;border-radius:8px;background:var(--glass);text-align:center;font-weight:700;color:#163a1b}
+
+    /* Footer */
+    .footer{margin-top:auto;text-align:center;padding:8px 6px;color:var(--muted);font-size:13px}
+
+    @media(min-width:420px){
+      .stage{width:420px}
+      .name{font-size:40px}
+    }
+    .parents-name{
+  font-family:'Great Vibes', cursive;
+  font-size:40px;
+  color:var(--accent);
+}
+
+
+
+/* Botón flotante de música */
+.music-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  z-index:50;
+
+  background: radial-gradient(circle at 30% 30%, #fff7d1, #c89b3c);
+  box-shadow:0 10px 20px rgba(0,0,0,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+}
+
+.music-btn span{
+  font-size:22px;
+}
+
+.music-btn:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 14px 26px rgba(0,0,0,0.3);
+}
+
+.music-btn.paused{
+  opacity:0.75;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="stage" role="main" aria-label="Invitación de quince años - Nashira">
+    <div class="canvas" id="canvas">
+
+      <!-- Título -->
+      <div class="top-crown title-wrap" id="titleWrap" role="heading" aria-level="1">
+        <svg class="crown-svg" viewBox="0 0 64 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M4 20c6-6 12-6 20-6s14 0 20 6" fill="none" stroke="rgba(196,154,58,0.9)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M1 20c11-14 18-14 30 0M9 6c2 4 4 6 7-1 2 4 4 5 9 1" fill="none" stroke="rgba(196,154,58,0.95)" stroke-width="1.6"/>
+        </svg>
+
+        <div style="width:100%">
+          <div class="name" id="nameText">Nashira Lucero Chata Choque</div>
+          <div class="tagline">Mis XV Años</div>
+          <div style="font-size:12px;color:var(--muted);max-width:86%;margin:8px auto;text-align:center;">
+            "Desea con el corazón, trabaja con constancia y la magia hará el resto."
+          </div>
+        </div>
+      </div>
+
+    <!-- Padres -->
+<div class="card" id="cardParents" aria-label="Padres">
+  <div class="muted">Con la bendición de mis papás</div>
+
+  <!-- Nombres mejorados -->
+  <div class="parents-name">Isaias Chata &amp; Lourdes Choque</div>
+
+  <div class="muted" style="margin-top:8px">
+    Se complacen en invitarte a una noche muy especial en mi honor.
+  </div>
+</div>
+
+
+      <!-- Información -->
+      <div class="info-grid" id="infoGrid" role="group" aria-label="Información del evento">
+
+       <div class="info-item card" id="cardDate">
+  <div class="info-icon">
+    <img src="calendario2.png" alt="Calendario" />
+  </div>
+  <div class="info-text">
+    <strong class="heading-strong">08 de diciembre de 2025</strong><br>
+    <span style="font-size:13px;color:var(--muted)">5:00 PM</span>
+  </div>
+</div>
+
+
+        <div class="info-item card" id="cardPlace">
+  <div class="info-icon">
+    <img src="ubicacion3.png" alt="Ubicación" />
+  </div>
+  <div class="info-text">
+    <strong class="heading-strong">Salón de Eventos Villa Los Próceres</strong><br>
+    <span style="font-size:13px;color:var(--muted)">Mz 60 Lt 25 (Puerta 1)</span>
+  </div>
+</div>
+
+
+      <div class="info-item card" id="cardDress">
+  <div class="info-icon">
+    <img src="vestimenta.png" alt="Vestimenta" />
+  </div>
+  <div class="info-text">
+    <strong class="heading-strong">Vestimenta: Elegante</strong><br>
+    <span style="font-size:13px;color:var(--muted)">
+      El color verde está reservado para la quinceañera
+    </span>
+  </div>
+</div>
+
+
+        <!-- Confirmación + Ubicación -->
+        <div class="info-item card" id="cardActions" style="flex-direction:column;gap:10px;align-items:center">
+          <div class="heading-strong" style="font-weight:700;color:var(--accent)">Confirmación &amp; Ubicación</div>
+
+          <div class="actions" role="group" aria-label="Botones de acción">
+            <!-- WhatsApp -->
+            <button class="btn btn-whats idlePulse" id="btnWhats"
+              onclick="window.open('https://wa.me/51924437345?text=Hola,%20confirmo%20mi%20asistencia%20a%20los%2015%20de%20Nashira%20Lucero%20Chata%20Choque!%20%F0%9F%92%9A')"
+              aria-label="Confirmar asistencia por WhatsApp">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.198.297-.767.967-.941 1.165-.173.198-.347.223-.645.074-.297-.149-1.255-.462-2.39-1.475-.885-.789-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.173.198-.297.298-.495.099-.198.05-.372-.025-.52-.074-.148-.67-1.611-.916-2.21-.242-.579-.487-.5-.67-.51l-.571-.01c-.198 0-.52.074-.793.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.077 4.487 0.709.306 1.26.489 1.69.625.71.226 1.36.194 1.873.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.29.173-1.414-.074-.123-.268-.198-.565-.347z"
+                      fill="currentColor" />
+              </svg>
+              Confirmar asistencia
+            </button>
+
+            <!-- Mapa -->
+            <button class="btn btn-map" id="btnMap"
+              onclick="window.open('https://maps.app.goo.gl/hfGu8w92FqSuxHXm6')"
+              aria-label="Abrir ubicación en mapas">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M12 2C8.13 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.13-7-7-7z" fill="currentColor"/>
+                <circle cx="12" cy="9" r="2.5" fill="white"/>
+              </svg>
+              Ver ubicación
+            </button>
+          </div>
+
+          <div style="font-size:12px;color:var(--muted)">
+            Por favor confirma antes del <strong>01 de Diciembre</strong>
+          </div>
+        </div>
+
+        <!-- Lluvia de sobres + contador -->
+        <div class="info-item card" id="cardGifts" style="flex-direction:column;align-items:center">
+          <div class="heading-strong" style="font-weight:700;color:var(--accent)">💌 Lluvia de sobres</div>
+          <div style="font-size:13px;color:var(--muted);text-align:center">
+            Tu presencia es mi mayor regalo. Si deseas un detalle, agradeceré tu cariño.
+          </div>
+
+          <div style="margin-top:10px;font-weight:700;color:var(--muted)">⏳ Faltan</div>
+          <div class="countdown" aria-live="polite" aria-atomic="true" id="countdown">
+            <div class="box" id="d">00</div>
+            <div class="box" id="h">00</div>
+            <div class="box" id="m">00</div>
+            <div class="box" id="s">00</div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">Días &nbsp;&nbsp; Hrs &nbsp;&nbsp; Min &nbsp;&nbsp; Seg</div>
+        </div>
+
+      </div>
+
+      <div class="footer" aria-hidden>✨ ¡Te espero! ✨</div>
+    </div>
+  </div>
+
+  <!-- Scripts: animaciones + countdown -->
+  <script>
+    // Animación de aparición
+    (function(){
+      const appearElems = [
+        document.getElementById('titleWrap'),
+        document.getElementById('cardParents'),
+        document.getElementById('cardDate'),
+        document.getElementById('cardPlace'),
+        document.getElementById('cardDress'),
+        document.getElementById('cardActions'),
+        document.getElementById('cardGifts')
+      ].filter(Boolean);
+
+      appearElems.forEach((el,i)=>{
+        const delay = 200 + i * 180;
+        setTimeout(()=>{
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          el.style.transition = 'opacity 520ms cubic-bezier(.2,.9,.2,1), transform 520ms cubic-bezier(.2,.9,.2,1)';
+        }, delay);
+        el.style.animation = `fadeUp .52s ease forwards`;
+        el.style.animationDelay = `${0.18 + i*0.12}s`;
+      });
+    })();
+
+    // Countdown
+    (function () {
+      const target = new Date('2025-12-08T17:00:00');
+      function update() {
+        const now = new Date();
+        let diff = Math.max(0, target - now);
+        const days = Math.floor(diff / (1000*60*60*24));
+        diff -= days * (1000*60*60*24);
+        const hours = Math.floor(diff / (1000*60*60));
+        diff -= hours * (1000*60*60);
+        const minutes = Math.floor(diff / (1000*60));
+        diff -= minutes * (1000*60);
+        const seconds = Math.floor(diff / 1000);
+        document.getElementById('d').textContent = String(days).padStart(2,'0');
+        document.getElementById('h').textContent = String(hours).padStart(2,'0');
+        document.getElementById('m').textContent = String(minutes).padStart(2,'0');
+        document.getElementById('s').textContent = String(seconds).padStart(2,'0');
+      }
+      update();
+      setInterval(update,1000);
+    })();
+
+    // Pulsos aleatorios de los botones
+    (function(){
+      const w = document.getElementById('btnWhats');
+      const m = document.getElementById('btnMap');
+      function randomPulse(btn){
+        if(!btn) return;
+        btn.classList.add('idlePulse');
+        setTimeout(()=> btn.classList.remove('idlePulse'), 2500);
+        setTimeout(()=> randomPulse(btn), 6000 + Math.random()*7000);
+      }
+      setTimeout(()=> randomPulse(w), 1200);
+      setTimeout(()=> randomPulse(m), 2600);
+    })();
+  </script>
+
+
+  
+  <!-- Música de fondo -->
+<audio id="bg-music" src="Ma Belle Evangeline.mp3" preload="auto" loop></audio>
+
+<!-- Botón flotante de música -->
+<button class="music-btn paused" id="musicToggle" aria-label="Activar o pausar música de fondo">
+  <span>🎵</span>
+</button>
+<script>
+  (function(){
+    const audio = document.getElementById('bg-music');
+    const btn   = document.getElementById('musicToggle');
+    let playing = false;
+
+    function updateBtn(){
+      if (playing){
+        btn.classList.remove('paused');
+        btn.innerHTML = '<span>⏸</span>';   // icono cuando está sonando
+      } else {
+        btn.classList.add('paused');
+        btn.innerHTML = '<span>🎵</span>';  // icono cuando está pausado
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      if (!playing){
+        audio.play().then(() => {
+          playing = true;
+          updateBtn();
+        }).catch(() => {
+          // por si el navegador bloquea algo, no hacemos nada
+        });
+      } else {
+        audio.pause();
+        playing = false;
+        updateBtn();
+      }
+    });
+  })();
+</script>
+
+
+</body>
+</html>
